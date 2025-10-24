@@ -1,6 +1,7 @@
 #pragma once
 #include "hardware.h"
 #include "Buzzer.h"
+#include "Timer.h"
 
 enum GameState {
     WAITING,
@@ -23,6 +24,7 @@ private:
     int roundCount;
     unsigned long lastUpdate;
     Buzzer buzzer;
+    Timer timer;
 
     void startRound();
     void checkLock();

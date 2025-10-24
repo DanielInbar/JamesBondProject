@@ -2,7 +2,7 @@
 #include "Constant.h"
 
 Game::Game(Hardware &hw)
-    : hardware(hw), state(WAITING), targetValue(0), roundCount(0), lastUpdate(0), buzzer(9) {}
+    : hardware(hw), state(WAITING), targetValue(0), roundCount(0), lastUpdate(0), buzzer(9), timer(15) {}
 
 void Game::begin() {
     hardware.display("Bond Bomb", "Press Toggle!");
@@ -42,6 +42,7 @@ void Game::update() {
 }
 
 void Game::startRound() {
+    timer.start();
     targetValue = random(200, 900); // new "code"
     state = LOCKING;
     hardware.display("Turn Dial...", " ");
@@ -66,7 +67,8 @@ void Game::checkLock() {
         for (int i = strength; i < 10; i++) bar += "-";
         bar += "]";
 
-        hardware.display("Dial Lock...", bar);
+        hardware.display("Dial Lock... ", bar);
+        Serial.println(timer.calcTime());
     }
 
     if (hardware.isConfirmPressed()) {
@@ -86,6 +88,10 @@ void Game::checkLock() {
         } else {
             endRound(false);
         }
+    }
+
+    if (timer.calcTime() == 15000) {
+        endRound(false);
     }
 }
 
