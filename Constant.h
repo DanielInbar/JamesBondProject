@@ -6,6 +6,7 @@
 namespace Constants {
 
   // const int BUZZER_PIN = 9;
+  const int timerTime = 5;
 
   // const int GREEN_LED_PIN = 5;
   // const int RED_LED_PIN = 6;
@@ -49,7 +50,7 @@ namespace Constants {
     NOTE_E5, NOTE_FS5, NOTE_GS5, NOTE_FS5, NOTE_GS5,
     NOTE_B6, NOTE_GS5, NOTE_B6,
     NOTE_C6, NOTE_GS5, NOTE_C6,
-    NOTE_B6, NOTE_GS5, NOTE_FS5, REST
+    NOTE_B6, NOTE_GS5, //NOTE_FS5, REST
 
   };
 

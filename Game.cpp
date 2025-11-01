@@ -2,7 +2,7 @@
 #include "Constant.h"
 
 Game::Game(Hardware &hw)
-    : hardware(hw), state(WAITING), targetValue(0), roundCount(0), lastUpdate(0), buzzer(9), timer(15) {}
+    : hardware(hw), state(WAITING), targetValue(0), roundCount(0), lastUpdate(0), buzzer(9), timer(Constants::timerTime) {}
 
 void Game::begin() {
     hardware.display("Bond Bomb", "Press Toggle!");
@@ -23,7 +23,7 @@ void Game::update() {
         case WAITING:
             if (hardware.isConfirmPressed()) {
                 hardware.display("Armed!", "Find code...");
-                hardware.ledOn();
+                hardware.ledOn(greenLedPin);
                 delay(800);
                 startRound();
             }
@@ -67,7 +67,7 @@ void Game::checkLock() {
         for (int i = strength; i < 10; i++) bar += "-";
         bar += "]";
 
-        hardware.display("Dial Lock... ", bar);
+        hardware.display(String("Dial Lock... ") + (timer.calcTime()/1000) + String("s"), bar);
         Serial.println(timer.calcTime());
     }
 
@@ -77,11 +77,12 @@ void Game::checkLock() {
             hardware.buzzerBeep(120);
             if (roundCount >= 3) {
                 state = DISARMED;
-                hardware.ledOff();
-                hardware.display("💣 DISARMED 💣", "Bond Wins!");
+                hardware.display("DISARMED", "Bond Wins!");
+                hardware.ledBlink(greenLedPin);
                 buzzer.playMelody(Constants::morningMoodMelody, Constants::morningMoodDurations, Constants::morningMoodSizeOfDurations);
+                hardware.ledOn(greenLedPin);
             } else {
-                hardware.display("✅ Success!", "Next lock...");
+                hardware.display("Success!", "Next lock...");
                 delay(1000);
                 startRound();
             }
@@ -90,7 +91,7 @@ void Game::checkLock() {
         }
     }
 
-    if (timer.calcTime() == 15000) {
+    if (timer.calcTime() == Constants::timerTime*1000) {
         endRound(false);
     }
 }
@@ -103,10 +104,11 @@ void Game::endRound(bool success) {
         startRound();
     } else {
         state = FAIL;
-        hardware.ledOff();
-        hardware.display("💥 BOOM! 💥", "Press Reset");
-        hardware.display("INVADE POLAND", "NOWWW!!!");
+        hardware.ledOff(greenLedPin);
+        hardware.display("BOOM!", "Press Reset");
+        hardware.ledBlink(redLedPin);
         buzzer.playMelody(Constants::erikaMelody, Constants::erikaDurations, Constants::erikaSizeOfDurations);
+        hardware.ledOn(redLedPin);
 
 
     }
@@ -115,7 +117,8 @@ void Game::endRound(bool success) {
 void Game::resetGame() {
     state = WAITING;
     roundCount = 0;
-    hardware.ledOff();
+    hardware.ledOff(greenLedPin);
+    hardware.ledOff(redLedPin);
     hardware.display("Bond Bomb", "Press Toggle!");
     buzzer.stopMelody();
 }

@@ -14,8 +14,9 @@ public:
     bool isResetPressed();
 
     void buzzerBeep(int duration = 200);
-    void ledOn();
-    void ledOff();
+    void ledOn(int mledPin);
+    void ledOff(int ledPin);
+    void ledBlink(int ledPin);
     void display(const String &line1, const String &line2);
 
 private:
@@ -23,7 +24,8 @@ private:
     const int confirmPin = 8; // toggle button
     const int resetPin = 7;
     const int buzzerPin = 9;
-    const int ledPin = 10;
+    const int greenLedPin = 11;
+    const int redLedPin = 10;
 
     bool confirmState;
     bool resetState;

@@ -25,6 +25,8 @@ private:
     unsigned long lastUpdate;
     Buzzer buzzer;
     Timer timer;
+    const int greenLedPin = 11;
+    const int redLedPin = 10;
 
     void startRound();
     void checkLock();
